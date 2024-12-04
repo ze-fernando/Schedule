@@ -1,4 +1,4 @@
-public static class LoginService
+public static class AuthService
 {
     public static string? Login(string email, string pass)
     {
@@ -10,17 +10,15 @@ public static class LoginService
             if (user == null)
                 return null;
 
-            if (BCrypt.Net.BCrypt.Verify(pass, user.Password))
+            if (!BCrypt.Net.BCrypt.Verify(pass, user.Password))
             {
 
-                string token = TokenService.Generate();
-                return token;
+                return null;
             }
-
 
         };
 
-
-        return null;
+        string token = TokenService.Generate();
+        return token;
     }
 }
