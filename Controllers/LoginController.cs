@@ -17,7 +17,7 @@ public class LoginController : ControllerBase
 
         var token = LoginService.Login(login.mail, login.pass);
 
-        if (token)
+        if (!string.IsNullOrWhiteSpace(token))
         {
             return Ok(new { jwt = token });
         }
