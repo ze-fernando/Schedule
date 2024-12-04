@@ -12,6 +12,6 @@ public class Schedule
         Place = place;
         Task = task;
         TaskPriority = taskPriority;
-        TaskUser = taskUser
+        TaskUser = taskUser;
     }
 }
