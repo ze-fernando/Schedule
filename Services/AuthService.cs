@@ -1,6 +1,6 @@
 public static class AuthService
 {
-    public static string? Login(string email, string pass)
+    public static string? Login(string? email, string? pass)
     {
         using (var context = new AppDbContext())
         {
@@ -21,4 +21,26 @@ public static class AuthService
         string token = TokenService.Generate();
         return token;
     }
+
+    public static User Signin(UserDto user)
+    {
+        var newUser = new User
+        {
+            FirstName = user.firstName,
+            LastName = user.lastName,
+            Email = user.email,
+            Password = user.password
+        };
+
+        using (var context = new AppDbContext())
+        {
+
+            context.Users?.Add(newUser);
+
+            context.SaveChanges();
+        }
+
+        return newUser;
+    }
+
 }
