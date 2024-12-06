@@ -4,15 +4,16 @@ public class UserDto
 {
 
     [Required(ErrorMessage = "Preencha todos os campos")]
-    string? fisrtName { get; set; }
+    public string? firstName { get; set; }
 
     [Required(ErrorMessage = "Preencha todos os campos")]
-    string? lastName { get; set; }
+    public string? lastName { get; set; }
 
     [Required(ErrorMessage = "Preencha todos os campos")]
     [EmailAddress(ErrorMessage = "Formato de email inváldo")]
-    string? email { get; set; }
+    public string? email { get; set; }
 
     [Required(ErrorMessage = "Preencha todos os campos")]
-    string? password { get; set; }
+    [MinLength(6, ErrorMessage = "A senha deve ter pelo menos 6 caracteres")]
+    public string? password { get; set; }
 };

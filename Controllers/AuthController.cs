@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 
 [ApiController]
-[Route("api/[controller]/")]
+[Route("/api/")]
 public class AuthController : ControllerBase
 {
     [HttpPost("login")]
@@ -25,10 +25,13 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("signin")]
-    public IActionResult Singin([FromBody] UserDto user)
+    public IActionResult Signin([FromBody] UserDto user)
     {
+        if (!ModelState.IsValid)
+            return BadRequest("Preencha os campos corretamente");
 
+        var newUser = AuthService.Signin(user);
 
-        return Ok();
+        return Created("", newUser);
     }
 }
