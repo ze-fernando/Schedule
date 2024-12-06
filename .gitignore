@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 #Db
 sqlite.db
+
+#Vscode
+.vscode

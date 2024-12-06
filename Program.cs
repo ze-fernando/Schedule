@@ -1,27 +1,28 @@
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(sg =>
+{
+    sg.SwaggerDoc("v1", new OpenApiInfo {Title = "Schedule API", Version = "v1",});
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(sg => 
+    {
+        sg.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+        sg.RoutePrefix = "";
+    });
 }
 
 app.UseHttpsRedirection();
 
-app.MapGet("/", () =>
-{
-    return "Hello word";
-});
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
