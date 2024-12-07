@@ -1,24 +1,28 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-
 public class TokenService
 {
-    public static string Generate()
+    public static string Generate(string email)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("5+IV)E2glD3xCH2rNTElZ_at9(TbG1N(E=pH)29*"));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-        var tokenDescriptor = new JwtSecurityToken(
-                issuer: "schedule",
-                audience: "schedule",
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: credentials
-                );
+        var date = DateTime.Now;
         var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.WriteToken(tokenDescriptor);
-
-        return token;
+        var key = Encoding.ASCII.GetBytes(Settings.Secret);
+        var tokenDesc = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]{
+                new Claim(ClaimTypes.Name, email)
+            }),
+            NotBefore = date,
+            Expires = date.AddHours(1),
+            SigningCredentials = new SigningCredentials(
+                  new SymmetricSecurityKey(key),
+                  SecurityAlgorithms.HmacSha256Signature
+              )
+        };
+        var token = tokenHandler.CreateToken(tokenDesc);
+        return tokenHandler.WriteToken(token);
     }
 }
