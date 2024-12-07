@@ -1,25 +1,24 @@
 public static class AuthService
 {
-    public static string? Login(string? email, string? pass)
+    public static string? Login(string email, string? pass)
     {
+        User? user;
         using (var context = new AppDbContext())
         {
-            var user = context.Users?
-                .Where(u => u.Email == email).FirstOrDefault();
+            user = context.Users?.FirstOrDefault(u => u.Email == email);
+        }
+        if (user == null)
+            return null;
+        else if (!BCrypt.Net.BCrypt.Verify(pass, user.Password))
+            return null;
 
-            if (user == null)
-                return null;
+        else
+        {
+            var token = TokenService.Generate(email);
 
-            if (!BCrypt.Net.BCrypt.Verify(pass, user.Password))
-            {
+            return token;
+        }
 
-                return null;
-            }
-
-        };
-
-        string token = TokenService.Generate();
-        return token;
     }
 
     public static User Signin(UserDto user)
@@ -29,7 +28,7 @@ public static class AuthService
             FirstName = user.firstName,
             LastName = user.lastName,
             Email = user.email,
-            Password = user.password
+            Password = BCrypt.Net.BCrypt.HashPassword(user.password, 12)
         };
 
         using (var context = new AppDbContext())
