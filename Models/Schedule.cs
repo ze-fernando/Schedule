@@ -1,10 +1,10 @@
 public class Schedule
 {
-    private int Id { get; set; }
-    private DateTime Date { get; set; }
-    private string? Place { get; set; }
-    private string? Task { get; set; }
-    private Priority TaskPriority { get; set; }
-    private User? TaskUser { get; set; }
+    public int Id { get; set; }
+    public DateTime Date { get; set; }
+    public string? Place { get; set; }
+    public string? Task { get; set; }
+    public Priority TaskPriority { get; set; }
+    public User? TaskUser { get; set; }
 
 }
