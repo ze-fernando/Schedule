@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 public class ScheduleDto
 {
     [Required]
-    private string? Place { get; set; }
+    public string? Place { get; set; }
     [Required]
-    private string? Task { get; set; }
+    public string? Task { get; set; }
     [Required]
-    private Priority TaskPriority { get; set; }
+    public Priority TaskPriority { get; set; }
     [Required]
-    private DateTime Date { get; set; }
+    public DateTime Date { get; set; }
     [Required]
-    private User? TaskUser { get; set; }
+    public User? TaskUser { get; set; }
 }
 
