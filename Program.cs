@@ -1,15 +1,23 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore; 
 using Microsoft.OpenApi.Models;
+using Schedule.Services;
+using Schedule.Entities;
 using System.Text;
-
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddTransient<TokenService>();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddTransient<TokenService>();
+builder.Services.AddScoped<AuthService>();
+//builder.Services.AddScoped<AppoinmentService>();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("DataSource=sqlite.db; Cache=Shared"));
+
+
 builder.Services.AddSwaggerGen(sg =>
 {
     sg.SwaggerDoc("v1", new OpenApiInfo { Title = "Schedule API", Version = "v1" });

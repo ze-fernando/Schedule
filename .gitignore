@@ -398,7 +398,8 @@ FodyWeavers.xsd
 *.sln.iml
 
 #Db
-sqlite.db
+*.db
+sqlite.*
 
 #Vscode
 .vscode
