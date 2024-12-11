@@ -3,6 +3,8 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
+namespace Schedule.Services;
+
 public class TokenService
 {
     public static string Generate(string email)

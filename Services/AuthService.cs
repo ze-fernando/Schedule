@@ -1,12 +1,18 @@
-public static class AuthService
+using Schedule.Models;
+using Schedule.Entities;
+using Schedule.Dtos;
+
+namespace Schedule.Services;
+
+public class AuthService(AppDbContext context)
 {
-    public static string? Login(string email, string? pass)
+    private readonly AppDbContext _context = context;
+
+    public string? Login(string email, string? pass)
     {
-        User? user;
-        using (var context = new AppDbContext())
-        {
-            user = context.Users?.FirstOrDefault(u => u.Email == email);
-        }
+
+        User? user = _context.Users?.FirstOrDefault(u => u.Email == email);
+
         if (user == null)
             return null;
         else if (!BCrypt.Net.BCrypt.Verify(pass, user.Password))
@@ -21,7 +27,7 @@ public static class AuthService
 
     }
 
-    public static User Signin(UserDto user)
+    public User Signin(UserDto user)
     {
         var newUser = new User
         {
@@ -31,13 +37,9 @@ public static class AuthService
             Password = BCrypt.Net.BCrypt.HashPassword(user.password, 12)
         };
 
-        using (var context = new AppDbContext())
-        {
+        _context.Users?.Add(newUser);
 
-            context.Users?.Add(newUser);
-
-            context.SaveChanges();
-        }
+        _context.SaveChanges();
 
         return newUser;
     }
