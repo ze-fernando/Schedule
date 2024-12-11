@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+namespace Schedule.Dtos;
+
 public class LoginDto
 {
     [Required]
@@ -7,6 +9,6 @@ public class LoginDto
     public string? email { get; set; }
 
     [Required]
-    public string? pass { get; set; }
+    public string? password { get; set; }
 }
 

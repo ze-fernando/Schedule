@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-
+using Schedule.Models;
+namespace Schedule.Dtos;
 
 public class ScheduleDto
 {

@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+namespace Schedule.Dtos;
+
 public class UserDto
 {
 
