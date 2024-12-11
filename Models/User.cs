@@ -1,3 +1,7 @@
+using Schedule.Models;
+
+namespace Schedule.Models;
+
 public class User
 {
     public int Id { get; set; }
@@ -6,4 +10,5 @@ public class User
     public string? Email { get; set; }
     public string? Password { get; set; }
 
+    public ICollection<Appointment>? Schedules { get; set; }
 }

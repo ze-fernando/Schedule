@@ -1,3 +1,5 @@
+namespace Schedule.Models;
+
 public enum Priority
 {
     Low,
