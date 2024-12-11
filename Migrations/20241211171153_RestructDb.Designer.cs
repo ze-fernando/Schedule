@@ -4,14 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Schedule.Entities;
 
 #nullable disable
 
-namespace schedule.Migrations
+namespace Schedule.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241208155631_InsertSchedule")]
-    partial class InsertSchedule
+    [Migration("20241211171153_RestructDb")]
+    partial class RestructDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,7 +20,7 @@ namespace schedule.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
-            modelBuilder.Entity("Schedule", b =>
+            modelBuilder.Entity("Schedule.Models.Appointment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,17 +38,17 @@ namespace schedule.Migrations
                     b.Property<int>("TaskPriority")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("TaskUserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TaskUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Schedules");
                 });
 
-            modelBuilder.Entity("User", b =>
+            modelBuilder.Entity("Schedule.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -70,13 +71,20 @@ namespace schedule.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Schedule", b =>
+            modelBuilder.Entity("Schedule.Models.Appointment", b =>
                 {
-                    b.HasOne("User", "TaskUser")
-                        .WithMany()
-                        .HasForeignKey("TaskUserId");
+                    b.HasOne("Schedule.Models.User", "User")
+                        .WithMany("Schedules")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("TaskUser");
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Schedule.Models.User", b =>
+                {
+                    b.Navigation("Schedules");
                 });
 #pragma warning restore 612, 618
         }
