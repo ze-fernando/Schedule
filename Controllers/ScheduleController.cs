@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Schedule.Services;
+using Schedule.Dtos;
 
+namespace Schedule.Controllers;
 
 [ApiController]
 [Authorize]
@@ -10,12 +13,7 @@ public class ScheduleController : ControllerBase
     [HttpPost]
     public IActionResult Create(ScheduleDto schedule)
     {
-        if (!ModelState.IsValid)
-            return BadRequest("Preencha todos os campos corretamente");
-
-        var newSchedule = ScheduleService.CreateSchedule(schedule);
-
-        return Created("", new { schedule = newSchedule });
+        return Ok();
     }
 
     [HttpGet]
