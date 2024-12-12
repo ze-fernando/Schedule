@@ -27,13 +27,53 @@ public class AppointmentService(AppDbContext context)
         return _appointment;
     }
 
-    public ICollection<Appointment> ReadAppointment(string id)
+    public ICollection<Appointment> ReadAppointment(string userId)
     {
         ICollection<Appointment> appointments = _context.Schedules
-        .Where(x => x.UserId == int.Parse(id))
+        .Where(x => x.UserId == int.Parse(userId))
         .ToList();
 
         return appointments;
     }
- 
+
+    public Appointment ReadOnlyAppointment(string userId, int id)
+    {
+        var appointment = _context.Schedules
+        .FirstOrDefault(x => x.UserId == int.Parse(userId) && x.Id == id);
+
+        if(appointment != null)     
+            return (Appointment)appointment;
+        
+        return null;
+    }
+
+    public Appointment UpdateAppointment(AppointmentDto ap, string userId, int id)
+    {
+        var appointment = _context.Schedules.FirstOrDefault(x =>
+        x.UserId == int.Parse(userId) && x.Id == id);
+
+        if(appointment == null)
+            return null;
+        
+        appointment.Date =  DateTime.ParseExact(ap.Date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+        appointment.Place = ap.Place;
+        appointment.Task = ap.Task;
+        appointment.TaskPriority = ap.TaskPriority;
+
+        _context.SaveChanges();
+        
+        return appointment;
+    }
+
+    public bool DeleteAppointment(string userId, int id)
+    {
+        var appointment = _context.Schedules.FirstOrDefault(x =>
+        x.UserId == int.Parse(userId) && x.Id == id);
+
+        if(appointment == null)
+            return false;
+
+        _context.Remove(appointment);
+        return true;
+    }
 }

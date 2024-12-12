@@ -4,6 +4,7 @@ using Schedule.Services;
 using Schedule.Dtos;
 using Schedule.Models;
 using System.Security.Claims;
+using System;
 
 namespace Schedule.Controllers;
 
@@ -15,13 +16,13 @@ public class ScheduleController(AppointmentService service) : ControllerBase
     private readonly AppointmentService _service = service;
 
     [HttpPost]
-    public IActionResult Create([FromBody] AppointmentDto appointment)
+    public IActionResult Create([FromBody] AppointmentDto apDto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userId))
             return BadRequest("Você precisa estar logado");
 
-        Appointment newAppointment = _service.CreateAppointment(appointment, userId);
+        Appointment newAppointment = _service.CreateAppointment(apDto, userId);
 
         return Created("", new { data = newAppointment });
     }
@@ -30,28 +31,47 @@ public class ScheduleController(AppointmentService service) : ControllerBase
     public IActionResult Read()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
         ICollection<Appointment> aps = _service.ReadAppointment(userId);
 
         return Ok(new{Appointments = aps});
     }
 
     [HttpGet("{id}")]
-    public IActionResult ReadOnly(int id)
+    public IActionResult ReadOnly([FromRoute] int id)
     {
-        return Ok();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Appointment appointment = _service.ReadOnlyAppointment(userId, id);
+
+        if(appointment != null)
+            return Ok(new{Apoointment = appointment});
+        
+        return BadRequest("Id não encontrado");
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id)
+    public IActionResult Update([FromRoute] int id, [FromBody] AppointmentDto apDto)
     {
-        return Ok();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var appointment = _service.UpdateAppointment(apDto, userId, id);
+
+        if(appointment != null)
+            return Ok(new {data = appointment});
+        
+        return BadRequest("Id não encontrado");
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public IActionResult Delete([FromRoute] int id)
     {
-        return Ok();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var status = _service.DeleteAppointment(userId, id);
+
+        if(status)
+            return Ok();
+        
+        return BadRequest("Id não encontrado");
     }
 }
 
