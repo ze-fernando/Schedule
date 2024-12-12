@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Schedule.Models;
 
 public class Appointment
@@ -9,4 +11,7 @@ public class Appointment
     public Priority TaskPriority { get; set; }
     
     public int UserId { get; set; }
+    
+    [JsonIgnore]
+    public User? User { get; set; }
 }

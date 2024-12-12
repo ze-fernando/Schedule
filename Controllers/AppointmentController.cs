@@ -15,7 +15,7 @@ public class ScheduleController(AppointmentService service) : ControllerBase
     private readonly AppointmentService _service = service;
 
     [HttpPost]
-    public IActionResult NewAppointment([FromBody] AppointmentDto appointment)
+    public IActionResult Create([FromBody] AppointmentDto appointment)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userId))
@@ -29,7 +29,11 @@ public class ScheduleController(AppointmentService service) : ControllerBase
     [HttpGet]
     public IActionResult Read()
     {
-        return Ok();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        ICollection<Appointment> aps = _service.ReadAppointment(userId);
+
+        return Ok(new{Appointments = aps});
     }
 
     [HttpGet("{id}")]
