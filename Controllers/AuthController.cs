@@ -13,10 +13,8 @@ public class AuthController(AuthService service) : ControllerBase
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginDto login)
     {
-        if (!ModelState.IsValid)
-            return BadRequest("Preencha os dados corretamente");
-
-        var tokenUser = _service.Login(login.email, login.password);
+    
+        var tokenUser = _service.Login(login.Email, login.Password);
 
         if (tokenUser == null)
             return BadRequest("Email ou senha invalidos");
