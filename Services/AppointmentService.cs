@@ -74,6 +74,7 @@ public class AppointmentService(AppDbContext context)
             return false;
 
         _context.Remove(appointment);
+        _context.SaveChanges();
         return true;
     }
 }
