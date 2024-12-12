@@ -7,16 +7,17 @@ namespace Schedule.Services;
 
 public class TokenService
 {
-    public static string Generate(string email)
+    public static string Generate(string email, int userId)
     {
         var date = DateTime.Now;
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(Settings.Secret);
         var tokenDesc = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[]{
-                new Claim(ClaimTypes.Name, email)
-            }),
+            Subject = new ClaimsIdentity([
+                new Claim(ClaimTypes.Name, email),
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+            ]),
             NotBefore = date,
             Expires = date.AddHours(1),
             SigningCredentials = new SigningCredentials(

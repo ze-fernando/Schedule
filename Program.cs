@@ -5,18 +5,23 @@ using Microsoft.OpenApi.Models;
 using Schedule.Services;
 using Schedule.Entities;
 using System.Text;
+using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+              options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddTransient<TokenService>();
+
 builder.Services.AddScoped<AuthService>();
-//builder.Services.AddScoped<AppoinmentService>();
+builder.Services.AddScoped<AppointmentService>();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("DataSource=sqlite.db; Cache=Shared"));
-
 
 builder.Services.AddSwaggerGen(sg =>
 {

@@ -20,7 +20,7 @@ public class AuthService(AppDbContext context)
 
         else
         {
-            var token = TokenService.Generate(email);
+            var token = TokenService.Generate(email, user.Id);
 
             return token;
         }
@@ -31,10 +31,10 @@ public class AuthService(AppDbContext context)
     {
         var newUser = new User
         {
-            FirstName = user.firstName,
-            LastName = user.lastName,
-            Email = user.email,
-            Password = BCrypt.Net.BCrypt.HashPassword(user.password, 12)
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email,
+            Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 12)
         };
 
         _context.Users?.Add(newUser);
