@@ -5,14 +5,11 @@ namespace Schedule.Dtos;
 
 public class AppointmentDto
 {
-    [Required]
-    public string? Place { get; set; }
+    public required string Place { get; set; }
 
-    [Required]
-    public string? Task { get; set; }
+    public required string Task { get; set; }
     
-    public Priority TaskPriority { get; set; }
+    public required Priority TaskPriority { get; set; }
 
-    [Required]
-    public string? Date { get; set; }
+    public required string Date { get; set; }
 }

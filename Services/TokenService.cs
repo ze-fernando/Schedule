@@ -11,7 +11,7 @@ public class TokenService
     {
         var date = DateTime.Now;
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(Settings.Secret);
+        var key = Encoding.ASCII.GetBytes(Settings.SecretKey);
         var tokenDesc = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity([

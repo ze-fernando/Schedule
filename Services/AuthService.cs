@@ -1,14 +1,17 @@
-using Schedule.Models;
+using Schedule.Services;
 using Schedule.Entities;
+using Schedule.Models;
 using Schedule.Dtos;
+using DotNetEnv;
 
 namespace Schedule.Services;
 
-public class AuthService(AppDbContext context)
+public class AuthService(AppDbContext context, EmailService service)
 {
     private readonly AppDbContext _context = context;
+    private readonly EmailService _service = service;
 
-    public string? Login(string email, string? pass)
+    public string? Login(string email, string pass)
     {
 
         User? user = _context.Users?.FirstOrDefault(u => u.Email == email);
@@ -27,19 +30,24 @@ public class AuthService(AppDbContext context)
 
     }
 
-    public User Signin(UserDto user)
+    public async Task<User> SigninAsync(UserDto user)
     {
         var newUser = new User
         {
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,
-            Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 12)
+            Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 12),
+            Token = Guid.NewGuid().ToString()
         };
+        
+        var confirmationLink = $"{Settings.BaseUrl}/api/confirm-email?token={newUser.Token}";
+        
+        _service.SendEmail(newUser.Email, "Confirmação de Cadastro", 
+            $"Clique no link para confirmar seu cadastro: {confirmationLink}");
 
         _context.Users?.Add(newUser);
-
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return newUser;
     }

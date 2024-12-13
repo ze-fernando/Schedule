@@ -32,6 +32,7 @@ public class AppointmentService(AppDbContext context)
         ICollection<Appointment> appointments = _context.Schedules
         .Where(x => x.UserId == int.Parse(userId))
         .ToList();
+        
 
         return appointments;
     }
@@ -42,7 +43,7 @@ public class AppointmentService(AppDbContext context)
         .FirstOrDefault(x => x.UserId == int.Parse(userId) && x.Id == id);
 
         if(appointment != null)     
-            return (Appointment)appointment;
+            return appointment;
         
         return null;
     }

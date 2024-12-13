@@ -28,7 +28,7 @@ public class AuthController(AuthService service) : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest("Preencha os campos corretamente");
 
-        var newUser = _service.Signin(user);
+        var newUser = _service.SigninAsync(user);
 
         return Created("", newUser);
     }

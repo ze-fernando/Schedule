@@ -1,12 +1,11 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore; 
 using Microsoft.OpenApi.Models;
 using Schedule.Services;
 using Schedule.Entities;
-using System.Text;
-using System.Text.Json.Serialization;
+using DotNetEnv;
 
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +18,7 @@ builder.Services.AddTransient<TokenService>();
 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AppointmentService>();
+builder.Services.AddScoped<EmailService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("DataSource=sqlite.db; Cache=Shared"));
@@ -51,19 +51,6 @@ builder.Services.AddSwaggerGen(sg =>
         }
     });
 });
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Settings.Secret)),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
-
 
 var app = builder.Build();
 

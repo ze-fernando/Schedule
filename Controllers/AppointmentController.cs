@@ -18,7 +18,8 @@ public class ScheduleController(AppointmentService service) : ControllerBase
     [HttpPost]
     public IActionResult Create([FromBody] AppointmentDto apDto)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
         if (string.IsNullOrEmpty(userId))
             return BadRequest("Você precisa estar logado");
 
@@ -30,7 +31,11 @@ public class ScheduleController(AppointmentService service) : ControllerBase
     [HttpGet]
     public IActionResult Read()
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return BadRequest("Você precisa estar logado");
+            
         ICollection<Appointment> aps = _service.ReadAppointment(userId);
 
         return Ok(new{Appointments = aps});
@@ -39,7 +44,10 @@ public class ScheduleController(AppointmentService service) : ControllerBase
     [HttpGet("{id}")]
     public IActionResult ReadOnly([FromRoute] int id)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return BadRequest("Você precisa estar logado");
         Appointment appointment = _service.ReadOnlyAppointment(userId, id);
 
         if(appointment != null)
@@ -51,7 +59,10 @@ public class ScheduleController(AppointmentService service) : ControllerBase
     [HttpPut("{id}")]
     public IActionResult Update([FromRoute] int id, [FromBody] AppointmentDto apDto)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return BadRequest("Você precisa estar logado");
 
         var appointment = _service.UpdateAppointment(apDto, userId, id);
 
@@ -64,7 +75,10 @@ public class ScheduleController(AppointmentService service) : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult Delete([FromRoute] int id)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return BadRequest("Você precisa estar logado");
 
         var status = _service.DeleteAppointment(userId, id);
 
