@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Mail;
 using DotNetEnv;
 using Schedule.Entities;
+using Schedule.Models;
 
 namespace Schedule.Services;
 
@@ -42,6 +43,24 @@ public class EmailService(AppDbContext context)
         await _context.SaveChangesAsync();
 
         return true;
+    }
+
+    public void SendSchedule(string userId)
+    {
+        DateTime today = DateTime.Today;
+
+        User user = _context.Users.FirstOrDefault(x => x.Id == int.Parse(userId));
+
+        if(user != null)
+        {
+            ICollection<Appointment> appointments = user.Schedules.Where(x => x.Date.Date == today).ToList();
+
+            foreach(var ap in appointments)
+            {
+                SendEmail(user.Email, "Tarefa do dia", $"Olá {user.FirstName} você tem uma tarefa para hoje {ap}");
+            }
+
+        }
     }
 
 }
