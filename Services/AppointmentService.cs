@@ -1,14 +1,16 @@
 using System.Globalization;
 using System.Security.Claims;
 using Schedule.Dtos;
+using Schedule.Services;
 using Schedule.Entities;
 using Schedule.Models;
 
 namespace Schedule.Services;
 
-public class AppointmentService(AppDbContext context)
+public class AppointmentService(AppDbContext context, EmailService s)
 {
     private readonly AppDbContext _context = context;
+    private readonly EmailService _service = s;
 
     public Appointment CreateAppointment(AppointmentDto ap, string id)
     {
@@ -31,8 +33,7 @@ public class AppointmentService(AppDbContext context)
     {
         ICollection<Appointment> appointments = _context.Schedules
         .Where(x => x.UserId == int.Parse(userId))
-        .ToList();
-        
+        .ToList();        
 
         return appointments;
     }

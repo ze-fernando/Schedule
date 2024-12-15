@@ -24,7 +24,7 @@ public class EmailService(AppDbContext context)
 
         var mailMessage = new MailMessage(senderMail, to, subject, body)
         {
-            IsBodyHtml = false
+            IsBodyHtml = true
         };
 
         await smtpClient.SendMailAsync(mailMessage);
@@ -51,15 +51,13 @@ public class EmailService(AppDbContext context)
 
         User user = _context.Users.FirstOrDefault(x => x.Id == int.Parse(userId));
 
-        if(user != null)
+        if(user.IsConfirmed)
         {
             ICollection<Appointment> appointments = user.Schedules.Where(x => x.Date.Date == today).ToList();
-
             foreach(var ap in appointments)
             {
                 SendEmail(user.Email, "Tarefa do dia", $"Olá {user.FirstName} você tem uma tarefa para hoje {ap}");
             }
-
         }
     }
 
