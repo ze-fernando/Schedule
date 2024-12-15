@@ -5,8 +5,8 @@ namespace Schedule.Entities;
 
 public class AppDbContext : DbContext
 {
-    public DbSet<User>? Users { get; set; }
-    public DbSet<Appointment>? Schedules { get; set; }
+    public required DbSet<User> Users { get; set; }
+    public required DbSet<Appointment> Schedules { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options){ }
 

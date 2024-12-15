@@ -49,7 +49,7 @@ public class EmailService(AppDbContext context)
     {
         DateTime today = DateTime.Today;
 
-        User user = _context.Users.FirstOrDefault(x => x.Id == int.Parse(userId));
+        User user = _context.Users.First(x => x.Id == int.Parse(userId));
 
         if(user.IsConfirmed)
         {

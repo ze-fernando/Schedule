@@ -12,4 +12,6 @@ public class AppointmentDto
     public required Priority TaskPriority { get; set; }
 
     public required string Date { get; set; }
+
+    public required string Hour { get; set; }
 }

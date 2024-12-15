@@ -17,6 +17,7 @@ public class AppointmentService(AppDbContext context, EmailService s)
         
         var _appointment = new Appointment{
             Date =  DateTime.ParseExact(ap.Date, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+            Hour =  DateTime.ParseExact(ap.Hour, "HH:mm", CultureInfo.InvariantCulture),
             Place = ap.Place,
             Task = ap.Task,
             TaskPriority = ap.TaskPriority,
@@ -33,23 +34,20 @@ public class AppointmentService(AppDbContext context, EmailService s)
     {
         ICollection<Appointment> appointments = _context.Schedules
         .Where(x => x.UserId == int.Parse(userId))
-        .ToList();        
+        .ToList();
 
         return appointments;
     }
 
-    public Appointment ReadOnlyAppointment(string userId, int id)
+    public Appointment? ReadOnlyAppointment(string userId, int id)
     {
         var appointment = _context.Schedules
         .FirstOrDefault(x => x.UserId == int.Parse(userId) && x.Id == id);
 
-        if(appointment != null)     
-            return appointment;
-        
-        return null;
+        return appointment;        
     }
 
-    public Appointment UpdateAppointment(AppointmentDto ap, string userId, int id)
+    public Appointment? UpdateAppointment(AppointmentDto ap, string userId, int id)
     {
         var appointment = _context.Schedules.FirstOrDefault(x =>
         x.UserId == int.Parse(userId) && x.Id == id);
@@ -58,6 +56,7 @@ public class AppointmentService(AppDbContext context, EmailService s)
             return null;
         
         appointment.Date =  DateTime.ParseExact(ap.Date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+        appointment.Hour =  DateTime.ParseExact(ap.Date, "HH:mm", CultureInfo.InvariantCulture);
         appointment.Place = ap.Place;
         appointment.Task = ap.Task;
         appointment.TaskPriority = ap.TaskPriority;
