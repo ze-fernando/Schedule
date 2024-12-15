@@ -24,7 +24,7 @@ public class Appointment
         <div style='border: 1px solid #ddd; padding: 10px; margin: 10px;'>
             <h3 style='color: #2c3e50;'>{Task}</h3>
             <p><strong>Data:</strong> {Date:dd/MM/yyyy}</p>
-            <p><strong>Data:</strong> {Hour:HH:mm}</p>
+            <p><strong>Hora:</strong> {Hour:HH:mm}</p>
             <p><strong>Local:</strong> {Place}</p>
             <p><strong>Prioridade:</strong> {TaskPriority}</p>
         </div>";
