@@ -53,7 +53,7 @@ public class AppointmentService(AppDbContext context, EmailService s)
         x.UserId == int.Parse(userId) && x.Id == id);
 
         if(appointment == null)
-            return null;
+            return null;c
         
         appointment.Date =  DateTime.ParseExact(ap.Date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
         appointment.Hour =  DateTime.ParseExact(ap.Date, "HH:mm", CultureInfo.InvariantCulture);

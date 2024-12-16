@@ -11,4 +11,6 @@ public static class Settings
     public static int PortSmtp => Env.GetInt("SMTP_PORT");
 
     public static string BaseUrl => Env.GetString("BASE_URI");
+
+    public static string DbConfig => Env.GetString("DATABASE");
 }
