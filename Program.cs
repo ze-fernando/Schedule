@@ -25,12 +25,10 @@ builder.Services.AddQuartz(qtz =>
     qtz.AddJob<JobSchedule>(options => options.WithIdentity(jobKey));
 
     qtz.AddTrigger(options => options
-    .ForJob(jobKey)
-    .WithIdentity("SendScheduleTrigger")
-    .StartNow()
-    .WithSimpleSchedule(s => s
-        .WithIntervalInSeconds(30)
-        .RepeatForever())
+        .ForJob(jobKey)
+        .WithIdentity("SendScheduleTrigger")
+        .StartNow()
+        .WithCronSchedule("0 0 6 * * ?")
     );
 });
 
