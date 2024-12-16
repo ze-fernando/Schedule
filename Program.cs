@@ -7,10 +7,34 @@ using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
+using Schedule.Job;
 
 Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddQuartz(qtz => 
+{
+    qtz.UseMicrosoftDependencyInjectionJobFactory();
+
+    var jobKey = new JobKey("SendScheduleJob");
+
+    qtz.AddJob<JobSchedule>(options => options.WithIdentity(jobKey));
+
+    qtz.AddTrigger(options => options
+    .ForJob(jobKey)
+    .WithIdentity("SendScheduleTrigger")
+    .StartNow()
+    .WithSimpleSchedule(s => s
+        .WithIntervalInSeconds(30)
+        .RepeatForever())
+    );
+});
+
+builder.Services.AddQuartzHostedService(qtz => qtz.WaitForJobsToComplete = true);
 
 
 builder.Services.AddControllers()

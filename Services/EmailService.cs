@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using DotNetEnv;
+using Microsoft.EntityFrameworkCore;
 using Schedule.Entities;
 using Schedule.Models;
 
@@ -48,7 +49,10 @@ public class EmailService(AppDbContext context)
 
     public void SendSchedule()
     {
-        ICollection<User> users = _context.Users.Where(x => x.IsConfirmed).ToList();
+        ICollection<User> users = _context.Users
+        .Include(u => u.Schedules)
+        .Where(x => x.IsConfirmed)
+        .ToList();
 
         DateTime today = DateTime.Today;
 
@@ -59,9 +63,11 @@ public class EmailService(AppDbContext context)
             emailBody.Append($"<h1>Olá {user.FirstName}</h1>");
             emailBody.Append("<h2>Suas tarefas para hoje:</h2>");
             
-            ICollection<Appointment> appointments = user.Schedules.Where(x => x.Date.Date == today).ToList();
+            ICollection<Appointment> appointments = user.Schedules
+            .Where(x => x.Date.Date == today)
+            .ToList() ?? new List<Appointment>();;
             
-            if (appointments.Count == 0)
+            if (appointments == null)
             {
                 emailBody.Append("<p>Você não tem tarefas agendadas para hoje.</p>");
             }
